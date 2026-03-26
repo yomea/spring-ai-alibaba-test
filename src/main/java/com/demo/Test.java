@@ -46,19 +46,12 @@ public class Test {
             .inputType(String.class)
             .build();
 
-        // 创建消息压缩 Hook
-        SummarizationHook summarizationHook = SummarizationHook.builder()
-            .model(chatModel)
-            .maxTokensBeforeSummary(4000)
-            .messagesToKeep(20)
-            .build();
-
         // 创建 agent
         ReactAgent agent = ReactAgent.builder()
             .name("weather_agent")
             .model(chatModel)
             .tools(weatherTool)
-            .hooks(summarizationHook)
+            .hooks(new AgentHookTest1(), new ModelHookTest1())
             .interceptors(new ModelInterceptorTest(), new ToolInterceptorTest())
             .systemPrompt("You are a helpful assistant")
             .saver(new MemorySaver())
