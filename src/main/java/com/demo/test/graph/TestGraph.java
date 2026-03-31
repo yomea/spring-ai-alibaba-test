@@ -20,10 +20,10 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
-import org.springframework.util.StringUtils;
 
 /**
  * 理解 Spring Ai Alibaba 的流程编排
+ *
  * @author wuzhenhong
  * @date 2026/3/31 15:56
  */
@@ -33,8 +33,6 @@ public class TestGraph {
         // 1. 定义全局状态
         OverAllState state = new OverAllState();
         state.registerKeyAndStrategy("topic", new ReplaceStrategy());
-        state.registerKeyAndStrategy("research_data", new ReplaceStrategy());
-        state.registerKeyAndStrategy("final_report", new ReplaceStrategy());
         state.input(Map.of("topic", "undefined"));
 
         // 2. 定义流程中的各个节点
