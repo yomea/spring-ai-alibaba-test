@@ -44,7 +44,8 @@ public class TestGraph {
             // 节点1：信息搜集节点，内部封装了调用搜索工具的LLM
             .addNode("research_node", node_async(((s, config) -> {
                 System.out.println("research_node........");
-                return Map.of("topic", "hello world!");
+                // 如果 Windows 中文乱码，设置 -Dfile.encoding=GBK 到启动参数中
+                return Map.of("topic", "您好！hello world!");
             })))
             // 节点2：报告撰写节点，内部封装了调用文档工具的LLM
             .addNode("writing_node", node_async((s, config) -> {
