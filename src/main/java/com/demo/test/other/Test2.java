@@ -1,21 +1,19 @@
-package com.demo;
+package com.demo.test.other;
 
 import com.alibaba.cloud.ai.dashscope.api.DashScopeApi;
 import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatModel;
 import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions;
-import com.alibaba.cloud.ai.graph.agent.ReactAgent;
-import com.alibaba.cloud.ai.graph.checkpoint.savers.MemorySaver;
 import com.alibaba.cloud.ai.graph.exception.GraphRunnerException;
-import org.springframework.ai.chat.messages.AssistantMessage;
+import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.tool.ToolCallback;
-import org.springframework.ai.tool.function.FunctionToolCallback;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.prompt.Prompt;
 
 /**
  * @author wuzhenhong
  * @date 2026/3/19 10:36
  */
-public class Test {
+public class Test2 {
 
     public static void main(String[] args) throws GraphRunnerException {
 
@@ -23,12 +21,12 @@ public class Test {
         DashScopeApi dashScopeApi = DashScopeApi.builder()
             .apiKey(System.getenv("API_KEY"))
             .baseUrl("https://dashscope.aliyuncs.com/compatible-mode/v1")
+//            .baseUrl("https://dashscope.aliyuncs.com/api/v1")
             .completionsPath("/chat/completions")
             .build();
 
         DashScopeChatOptions defaultOptions = DashScopeChatOptions.builder()
             .model("qwen-plus")        // 指定模型 code
-            .temperature(0.7)          // 可选参数
             .build();
 
         ChatModel chatModel = DashScopeChatModel.builder()
@@ -36,25 +34,24 @@ public class Test {
             .defaultOptions(defaultOptions)
             .build();
 
-        ToolCallback weatherTool = FunctionToolCallback.builder("get_weather", new WeatherTool())
-            .description("Get weather for a given city")
-            .inputType(String.class)
-            .build();
+        // 创建 Prompt
+        Prompt prompt = new Prompt(new UserMessage("解释什么是微服务架构"));
 
+// 调用并获取响应
+        ChatResponse response = chatModel.call(prompt);
+        String answer = response.getResult().getOutput().getText();
+        System.out.println(answer);
         // 创建 agent
-        ReactAgent agent = ReactAgent.builder()
-            .name("weather_agent")
+        /*ReactAgent agent = ReactAgent.builder()
+            .name("java_agent")
             .model(chatModel)
-            .tools(weatherTool)
-            .hooks(new AgentHookTest1(), new ModelHookTest1())
-            .interceptors(new ModelInterceptorTest(), new ToolInterceptorTest())
-            .systemPrompt("You are a helpful assistant")
+            .systemPrompt("您是一个java专家")
             .saver(new MemorySaver())
             .build();
 
         // 运行 agent
-        AssistantMessage response = agent.call("what is the weather in San Francisco");
-        System.out.println(response.getText());
+        AssistantMessage response = agent.call("目前你了解到的最新java版本到了多少？");
+        System.out.println(response.getText());*/
 
         /*Flux<NodeOutput> stream = agent.stream("what is the weather in San Francisco");
         stream.subscribe(

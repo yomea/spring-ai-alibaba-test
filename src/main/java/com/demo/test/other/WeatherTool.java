@@ -1,4 +1,4 @@
-package com.demo;
+package com.demo.test.other;
 
 import java.util.function.BiFunction;
 import org.springframework.ai.chat.model.ToolContext;
