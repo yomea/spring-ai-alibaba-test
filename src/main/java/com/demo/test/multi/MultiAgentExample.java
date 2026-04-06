@@ -67,7 +67,7 @@ public class MultiAgentExample {
 	 *
 	 * 注意：需要配置ChatModel实例才能运行
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		// 创建 DashScope API 实例
 		DashScopeApi dashScopeApi = DashScopeApi.builder()
 				.apiKey(System.getenv("API_KEY"))
@@ -89,6 +89,7 @@ public class MultiAgentExample {
 
 		// 运行所有示例
 		example.runAllExamples();
+//		example.example3_parallelAgent();
 	}
 
 	/**

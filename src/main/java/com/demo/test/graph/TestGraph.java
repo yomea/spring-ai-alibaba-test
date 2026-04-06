@@ -1,25 +1,16 @@
 package com.demo.test.graph;
 
-import com.alibaba.cloud.ai.graph.CompiledGraph;
-import com.alibaba.cloud.ai.graph.KeyStrategy;
-import com.alibaba.cloud.ai.graph.OverAllState;
-import com.alibaba.cloud.ai.graph.RunnableConfig;
-import com.alibaba.cloud.ai.graph.StateGraph;
-import com.alibaba.cloud.ai.graph.action.AsyncNodeActionWithConfig;
-import com.alibaba.cloud.ai.graph.action.NodeActionWithConfig;
+import com.alibaba.cloud.ai.graph.*;
 import com.alibaba.cloud.ai.graph.agent.exception.AgentException;
 import com.alibaba.cloud.ai.graph.exception.GraphStateException;
 import com.alibaba.cloud.ai.graph.state.strategy.AppendStrategy;
 import com.alibaba.cloud.ai.graph.state.strategy.ReplaceStrategy;
-import io.opentelemetry.context.Context;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
+
+import java.util.*;
+
+import static com.alibaba.cloud.ai.graph.action.AsyncNodeActionWithConfig.node_async;
 
 /**
  * 理解 Spring Ai Alibaba 的流程编排
@@ -97,19 +88,6 @@ public class TestGraph {
                 .map(msg -> (AssistantMessage) msg))
             .reduce((first, second) -> second)
             .orElseThrow(() -> new AgentException("No AssistantMessage found in 'messages' state"));
-    }
-
-    private static AsyncNodeActionWithConfig node_async(NodeActionWithConfig syncAction) {
-        return (state, config) -> {
-            Context context = Context.current();
-            CompletableFuture<Map<String, Object>> result = new CompletableFuture<>();
-            try {
-                result.complete(syncAction.apply(state, config));
-            } catch (Exception e) {
-                result.completeExceptionally(e);
-            }
-            return result;
-        };
     }
 
 }
