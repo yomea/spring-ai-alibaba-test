@@ -177,17 +177,30 @@ public class ParallelStreamingExample {
 		AsyncNodeAction streamingNode = state -> {
 			// 创建流式数据
 			Flux<String> dataStream = Flux.just("块1", "块2", "块3", "块4", "块5")
-					.delayElements(Duration.ofMillis(100));
+					.delayElements(Duration.ofSeconds(1));
 
 
 			return CompletableFuture.completedFuture(Map.of("stream_output", dataStream));
 		};
 
+        // 单个流式节点
+        AsyncNodeAction streamingNode2 = state -> {
+            // 创建流式数据
+            Flux<String> dataStream = Flux.just("F1", "F2", "F3", "F4", "F5")
+                .delayElements(Duration.ofSeconds(2));
+
+
+            return CompletableFuture.completedFuture(Map.of("stream_output2", dataStream));
+        };
+
 		// 构建图
 		StateGraph stateGraph = new StateGraph(keyStrategyFactory)
 				.addNode("streaming_node", streamingNode)
+				.addNode("streaming_node2", streamingNode2)
 				.addEdge(START, "streaming_node")
-				.addEdge("streaming_node", END);
+				.addEdge("streaming_node", "streaming_node2")
+				.addEdge("streaming_node2", END)
+            ;
 
 		// 编译图
 		CompiledGraph graph = stateGraph.compile(
@@ -204,7 +217,6 @@ public class ParallelStreamingExample {
 
 		AtomicInteger streamCount = new AtomicInteger(0);
 		String[] lastNodeId = new String[1];
-
 		// 执行流式图
 		graph.stream(Map.of("input", "test"), config)
 				.filter(output -> output instanceof StreamingOutput)
@@ -213,7 +225,7 @@ public class ParallelStreamingExample {
 					streamCount.incrementAndGet();
 					lastNodeId[0] = streamingOutput.node();
 					System.out.println("[流式输出] 节点: " + streamingOutput.node() +
-							", 内容: " + streamingOutput.chunk());
+							", 内容: " + streamingOutput.getOriginData());
 				})
 				.doOnComplete(() -> {
 					System.out.println("\n=== 单节点流式输出完成 ===");

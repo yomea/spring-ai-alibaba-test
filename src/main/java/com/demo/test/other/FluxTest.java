@@ -19,9 +19,11 @@ public class FluxTest {
             .delayElements(Duration.ofSeconds(1))
             .doOnNext(i -> System.out.println("data: 数字 " + i + "\n\n"))
             .doOnComplete(() -> System.out.println("完成！"))
-            .blockLast()
-//            .subscribe(System.out::println)
+//            .blockLast()
+            .subscribe(System.out::println)
         ;
+
+        System.out.println("tttttttttttt");
     }
 
 }

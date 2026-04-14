@@ -20,7 +20,7 @@ import static com.alibaba.cloud.ai.graph.action.AsyncNodeActionWithConfig.node_a
  */
 public class TestGraph {
 
-    public static void main(String[] args) throws GraphStateException {
+     public static void main(String[] args) throws GraphStateException {
         // 1. 定义全局状态
         OverAllState state = new OverAllState();
         state.registerKeyAndStrategy("topic", new ReplaceStrategy());
