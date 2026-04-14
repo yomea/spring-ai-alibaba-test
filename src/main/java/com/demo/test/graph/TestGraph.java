@@ -1,16 +1,23 @@
 package com.demo.test.graph;
 
-import com.alibaba.cloud.ai.graph.*;
+import static com.alibaba.cloud.ai.graph.action.AsyncNodeActionWithConfig.node_async;
+
+import com.alibaba.cloud.ai.graph.CompiledGraph;
+import com.alibaba.cloud.ai.graph.KeyStrategy;
+import com.alibaba.cloud.ai.graph.OverAllState;
+import com.alibaba.cloud.ai.graph.RunnableConfig;
+import com.alibaba.cloud.ai.graph.StateGraph;
 import com.alibaba.cloud.ai.graph.agent.exception.AgentException;
 import com.alibaba.cloud.ai.graph.exception.GraphStateException;
 import com.alibaba.cloud.ai.graph.state.strategy.AppendStrategy;
 import com.alibaba.cloud.ai.graph.state.strategy.ReplaceStrategy;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
-
-import java.util.*;
-
-import static com.alibaba.cloud.ai.graph.action.AsyncNodeActionWithConfig.node_async;
 
 /**
  * 理解 Spring Ai Alibaba 的流程编排
@@ -20,7 +27,7 @@ import static com.alibaba.cloud.ai.graph.action.AsyncNodeActionWithConfig.node_a
  */
 public class TestGraph {
 
-     public static void main(String[] args) throws GraphStateException {
+    public static void main(String[] args) throws GraphStateException {
         // 1. 定义全局状态
         OverAllState state = new OverAllState();
         state.registerKeyAndStrategy("topic", new ReplaceStrategy());
